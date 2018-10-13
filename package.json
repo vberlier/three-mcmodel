@@ -18,7 +18,8 @@
     "minecraft",
     "minecraft-json-models",
     "3d",
-    "threejs-loader"
+    "threejs-loader",
+    "three"
   ],
   "author": "Valentin Berlier <berlier.v@gmail.com>",
   "license": "MIT",
