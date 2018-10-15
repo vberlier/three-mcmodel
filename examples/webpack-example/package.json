@@ -7,7 +7,8 @@
   },
   "dependencies": {
     "three": "^0.97.0",
-    "three-mcmodel": "latest"
+    "three-mcmodel": "latest",
+    "three-orbitcontrols": "^2.96.3"
   },
   "devDependencies": {
     "html-webpack-plugin": "^4.0.0-beta.2",
