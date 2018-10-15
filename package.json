@@ -1,6 +1,6 @@
 {
   "name": "three-mcmodel",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A library for working with Minecraft json models using three.js.",
   "author": "Valentin Berlier <berlier.v@gmail.com>",
   "license": "MIT",
