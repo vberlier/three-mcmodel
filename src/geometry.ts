@@ -1,14 +1,14 @@
 import { BufferGeometry, Float32BufferAttribute } from 'three'
 
-import { MinecraftModelElement } from './model'
+import { MinecraftModel } from './model'
 
 export class MinecraftModelGeometry extends BufferGeometry {
-  constructor (elements: MinecraftModelElement[]) {
+  constructor (model: MinecraftModel) {
     super()
 
     const vertices = []
 
-    for (const element of elements) {
+    for (const element of model.elements) {
       const { from: [x1, y1, z1], to: [x2, y2, z2] } = element
 
       const faces = [

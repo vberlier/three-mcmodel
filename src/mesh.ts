@@ -13,7 +13,7 @@ export class MinecraftModelMesh extends Mesh {
       throw new Error('Invalid model')
     }
 
-    const geometry = new MinecraftModelGeometry(model.elements)
+    const geometry = new MinecraftModelGeometry(model)
     const material = new MeshBasicMaterial({ color: 0xff0000 })
 
     super(geometry, material)
