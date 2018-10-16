@@ -15,7 +15,9 @@ export interface MinecraftModelFace {
 export function isMinecraftModelFace (face: any): face is MinecraftModelFace {
   return (
     face &&
-    typeof face.texture === 'string'
+    typeof face.texture === 'string' &&
+    face.texture.length >= 2 &&
+    face.texture[0] === '#'
   )
 }
 
@@ -42,12 +44,14 @@ export function isMinecraftModelElement (element: any): element is MinecraftMode
     element.faces &&
     (faceCount = Object.keys(element.faces).length) >= 1 &&
     faceCount <= 6 &&
-    (element.faces.down === undefined || isMinecraftModelFace(element.faces.down)) &&
-    (element.faces.up === undefined || isMinecraftModelFace(element.faces.up)) &&
-    (element.faces.north === undefined || isMinecraftModelFace(element.faces.north)) &&
-    (element.faces.south === undefined || isMinecraftModelFace(element.faces.south)) &&
-    (element.faces.west === undefined || isMinecraftModelFace(element.faces.west)) &&
-    (element.faces.east === undefined || isMinecraftModelFace(element.faces.east))
+    [
+      element.faces.down, element.faces.up,
+      element.faces.north, element.faces.south,
+      element.faces.west, element.faces.east
+    ]
+      .every((face: any) =>
+        face === undefined || isMinecraftModelFace(face)
+      )
   )
 }
 
