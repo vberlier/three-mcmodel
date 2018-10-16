@@ -1,27 +1,30 @@
 {
+  "textures": {
+    "0": "block/stone"
+  },
   "elements": [
     {
       "from": [0, 0, 0],
       "to": [16, 16, 16],
       "faces": {
-        "north": { "texture": "#none" },
-        "south": { "texture": "#none" }
+        "north": { "texture": "#0" },
+        "south": { "texture": "#0" }
       }
     },
     {
       "from": [-12, 4, 4],
       "to": [-4, 12, 12],
       "faces": {
-        "east": { "texture": "#none" },
-        "west": { "texture": "#none" }
+        "east": { "texture": "#0" },
+        "west": { "texture": "#0" }
       }
     },
     {
       "from": [8, 28, 0],
       "to": [16, 32, 4],
       "faces": {
-        "up": { "texture": "#none" },
-        "down": { "texture": "#none" }
+        "up": { "texture": "#0" },
+        "down": { "texture": "#0" }
       }
     }
   ]
