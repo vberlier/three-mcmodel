@@ -33,11 +33,15 @@ export interface MinecraftModelElement {
 }
 
 export function isMinecraftModelElement (element: any): element is MinecraftModelElement {
+  let faceCount
+
   return (
     element &&
     isArrayVector3(element.from) &&
     isArrayVector3(element.to) &&
     element.faces &&
+    (faceCount = Object.keys(element.faces).length) >= 1 &&
+    faceCount <= 6 &&
     (element.faces.down === undefined || isMinecraftModelFace(element.faces.down)) &&
     (element.faces.up === undefined || isMinecraftModelFace(element.faces.up)) &&
     (element.faces.north === undefined || isMinecraftModelFace(element.faces.north)) &&
