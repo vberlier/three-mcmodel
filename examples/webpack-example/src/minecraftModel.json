@@ -26,6 +26,18 @@
         "up": { "texture": "#0" },
         "down": { "texture": "#0" }
       }
+    },
+    {
+      "from": [20, 4, 4],
+      "to": [28, 12, 12],
+      "faces": {
+        "east": { "texture": "#0" },
+        "west": { "texture": "#0" },
+        "up": { "texture": "#0" },
+        "down": { "texture": "#0" },
+        "north": { "texture": "#0" },
+        "south": { "texture": "#0" }
+      }
     }
   ]
 }
