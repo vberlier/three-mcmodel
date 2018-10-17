@@ -8,8 +8,19 @@ export function isArrayVector3 (arrayVector: any): arrayVector is ArrayVector3 {
   )
 }
 
+export type ArrayVector4 = [number, number, number, number]
+
+export function isArrayVector4 (arrayVector: any): arrayVector is ArrayVector4 {
+  return (
+    Array.isArray(arrayVector) &&
+    arrayVector.length === 4 &&
+    arrayVector.every(coordinate => typeof coordinate === 'number')
+  )
+}
+
 export interface MinecraftModelFace {
-  texture: string
+  texture: string,
+  uv?: ArrayVector4
 }
 
 export function isMinecraftModelFace (face: any): face is MinecraftModelFace {
@@ -17,7 +28,8 @@ export function isMinecraftModelFace (face: any): face is MinecraftModelFace {
     face &&
     typeof face.texture === 'string' &&
     face.texture.length >= 2 &&
-    face.texture[0] === '#'
+    face.texture[0] === '#' &&
+    (face.uv === undefined || isArrayVector4(face.uv))
   )
 }
 
