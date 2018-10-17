@@ -2,7 +2,7 @@ export { MinecraftModelGeometry } from './geometry'
 export { MinecraftModelMesh } from './mesh'
 export {
   ArrayVector3, isArrayVector3,
-  MinecraftModelFace, isMinecraftModelFace,
+  MinecraftModelFaceName, MinecraftModelFace, isMinecraftModelFace,
   MinecraftModelElement, isMinecraftModelElement,
   MinecraftModel, isMinecraftModel
 } from './model'
