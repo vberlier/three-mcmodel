@@ -33,7 +33,7 @@
       "faces": {
         "east": { "texture": "#0" },
         "west": { "texture": "#0" },
-        "up": { "texture": "#0" },
+        "up": { "texture": "#0", "uv": [0, 0, 8, 8] },
         "down": { "texture": "#0" },
         "north": { "texture": "#0" },
         "south": { "texture": "#0" }
