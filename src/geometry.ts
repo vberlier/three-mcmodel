@@ -1,38 +1,50 @@
-import { BufferGeometry, Float32BufferAttribute } from 'three'
+import { BufferGeometry, Float32BufferAttribute, Uint16BufferAttribute } from 'three'
 
 import { MinecraftModel, MinecraftModelFaceName } from './model'
+
+const faceVertices = {
+  west: [[0, 0, 0], [0, 1, 0], [0, 1, 1], [0, 0, 1]],
+  east: [[1, 0, 1], [1, 1, 1], [1, 1, 0], [1, 0, 0]],
+  down: [[0, 0, 0], [0, 0, 1], [1, 0, 1], [1, 0, 0]],
+  up: [[0, 1, 1], [0, 1, 0], [1, 1, 0], [1, 1, 1]],
+  north: [[1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 0, 0]],
+  south: [[0, 0, 1], [0, 1, 1], [1, 1, 1], [1, 0, 1]]
+}
 
 export class MinecraftModelGeometry extends BufferGeometry {
   constructor (model: MinecraftModel) {
     super()
+    const [vertices, uvs, indices] = this.computeAttributes(model)
 
+    this.addAttribute('position', new Float32BufferAttribute(vertices, 3))
+    this.addAttribute('uv', new Float32BufferAttribute(uvs, 2))
+    this.setIndex(new Uint16BufferAttribute(indices, 1))
+  }
+
+  private computeAttributes (model: MinecraftModel) {
     const vertices = []
+    const uvs = []
+    const indices = []
 
     for (const element of model.elements) {
-      const { from: [x1, y1, z1], to: [x2, y2, z2] } = element
-
-      const faces = {
-        west: [x1, y2, z1, x1, y1, z2],
-        east: [x2, y1, z1, x2, y2, z2],
-        down: [x2, y1, z1, x1, y1, z2],
-        up: [x1, y2, z1, x2, y2, z2],
-        north: [x2, y1, z1, x1, y2, z1],
-        south: [x1, y1, z2, x2, y2, z2]
-      }
+      const { from, to } = element
 
       for (const faceName in element.faces) {
-        const [ax, ay, az, bx, by, bz] = faces[faceName as MinecraftModelFaceName]
+        const i = vertices.length / 3
+        indices.push(i, i + 2, i + 1)
+        indices.push(i, i + 3, i + 2)
 
-        vertices.push(bx, ay, az)
-        vertices.push(ax, by, az)
-        vertices.push(ax, ay, bz)
+        for (const vertex of faceVertices[faceName as MinecraftModelFaceName]) {
+          vertices.push(...vertex.map((v, i) => v === 0 ? from[i] : to[i]))
+        }
 
-        vertices.push(ax, by, bz)
-        vertices.push(bx, ay, bz)
-        vertices.push(bx, by, az)
+        uvs.push(0, 0)
+        uvs.push(0, 1)
+        uvs.push(1, 1)
+        uvs.push(1, 0)
       }
     }
 
-    this.addAttribute('position', new Float32BufferAttribute(vertices, 3))
+    return [vertices, uvs, indices]
   }
 }
