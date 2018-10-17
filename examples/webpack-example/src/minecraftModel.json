@@ -9,10 +9,10 @@
       "faces": {
         "east": { "texture": "#0" },
         "west": { "texture": "#0" },
-        "up": { "texture": "#0" },
-        "down": { "texture": "#0", "uv": [0,0,16,16] },
+        "up": { "texture": "#0", "uv": [0, 16, 16, 0] },
+        "down": { "texture": "#0", "uv": [0, 0, 16, 16] },
         "north": { "texture": "#0" },
-        "south": { "texture": "#0", "uv": [0,0,16,16] }
+        "south": { "texture": "#0", "uv": [0, 0, 16, 16] }
       }
     },
     {
