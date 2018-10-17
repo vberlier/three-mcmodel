@@ -21,17 +21,12 @@ export function isMinecraftModelFace (face: any): face is MinecraftModelFace {
   )
 }
 
+export type MinecraftModelFaceName = 'west' | 'east' | 'down' | 'up' | 'north' | 'south'
+
 export interface MinecraftModelElement {
   from: ArrayVector3
   to: ArrayVector3
-  faces: {
-    down?: MinecraftModelFace,
-    up?: MinecraftModelFace,
-    north?: MinecraftModelFace,
-    south?: MinecraftModelFace,
-    west?: MinecraftModelFace,
-    east?: MinecraftModelFace
-  }
+  faces: { [name in MinecraftModelFaceName]: MinecraftModelFace }
 }
 
 export function isMinecraftModelElement (element: any): element is MinecraftModelElement {
