@@ -1,4 +1,5 @@
 export { MinecraftModelGeometry } from './geometry'
+export { MinecraftModelMaterial } from './material'
 export { MinecraftModelMesh } from './mesh'
 export {
   ArrayVector3, isArrayVector3,
