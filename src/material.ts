@@ -4,7 +4,7 @@ import missingTexture from './missingTexture'
 import { MinecraftModel } from './model'
 
 export class MinecraftModelMaterial extends MeshBasicMaterial {
-  constructor (model: MinecraftModel) {
+  constructor (_model: MinecraftModel) {
     super({
       map: missingTexture
     })
