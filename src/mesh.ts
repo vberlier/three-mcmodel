@@ -1,6 +1,7 @@
-import { Mesh, MeshBasicMaterial } from 'three'
+import { Mesh } from 'three'
 
 import { MinecraftModelGeometry } from './geometry'
+import { MinecraftModelMaterial } from './material'
 import { MinecraftModel, isMinecraftModel } from './model'
 
 export class MinecraftModelMesh extends Mesh {
@@ -14,7 +15,7 @@ export class MinecraftModelMesh extends Mesh {
     }
 
     const geometry = new MinecraftModelGeometry(model)
-    const material = new MeshBasicMaterial({ color: 0xff0000 })
+    const material = new MinecraftModelMaterial(model)
 
     super(geometry, material)
   }
