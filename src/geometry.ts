@@ -2,7 +2,7 @@ import { BufferGeometry, Float32BufferAttribute, Uint16BufferAttribute } from 't
 
 import { MinecraftModel, MinecraftModelFaceName, ArrayVector3, ArrayVector4} from './model'
 
-const faceVertices = {
+const vertexMap = {
   west: [[0, 0, 0], [0, 1, 0], [0, 1, 1], [0, 0, 1]],
   east: [[1, 0, 1], [1, 1, 1], [1, 1, 0], [1, 0, 0]],
   down: [[0, 0, 0], [0, 0, 1], [1, 0, 1], [1, 0, 0]],
@@ -37,7 +37,7 @@ export class MinecraftModelGeometry extends BufferGeometry {
         indices.push(i, i + 2, i + 1)
         indices.push(i, i + 3, i + 2)
 
-        for (const vertex of faceVertices[faceName]) {
+        for (const vertex of vertexMap[faceName]) {
           vertices.push(...vertex.map((v, i) => v === 0 ? from[i] : to[i]))
         }
 
