@@ -41,22 +41,25 @@ export class MinecraftModelGeometry extends BufferGeometry {
           vertices.push(...vertex.map((v, i) => v === 0 ? from[i] : to[i]))
         }
 
-        const [u1, v1, u2, v2] = (face.uv || this.defaultUvs(faceName, from, to)).map(coordinate => coordinate / 16)
+        const [u1, v1, u2, v2] = (face.uv || this.generatedUvs(faceName, from, to)).map(coordinate => coordinate / 16)
 
-        const bias = 1 - Math.max(v1, v2)
-        const [fixedV1, fixedV2] = [v1, v2].map(coordinate => bias + coordinate)
-
-        uvs.push(u1, fixedV1)
-        uvs.push(u1, fixedV2)
-        uvs.push(u2, fixedV2)
-        uvs.push(u2, fixedV1)
+        uvs.push(u1, 1 - v2)
+        uvs.push(u1, 1 - v1)
+        uvs.push(u2, 1 - v1)
+        uvs.push(u2, 1 - v2)
       }
     }
 
     return [vertices, uvs, indices]
   }
 
-  defaultUvs (faceName: MinecraftModelFaceName, from: ArrayVector3, to: ArrayVector3): ArrayVector4 {
-    return [0, 0, 16, 16]
+  generatedUvs (faceName: MinecraftModelFaceName, [x1, y1, z1]: ArrayVector3, [x2, y2, z2]: ArrayVector3): ArrayVector4 {
+    return (
+      faceName === 'west' ? [z1, 16 - y2, z2, 16 - y1] :
+      faceName === 'east' ? [16 - z2, 16 - y2, 16 - z1, 16 - y1] :
+      faceName === 'down' ? [x1, 16 - z2, x2, 16 - z1] :
+      faceName === 'up' ? [x1, z1, x2, z2] :
+      faceName === 'north' ? [16 - x2, 16 - y2, 16 - x1, 16 - y1] : [x1, 16 - y2, x2, 16 - y1]
+     ) as ArrayVector4
   }
 }
