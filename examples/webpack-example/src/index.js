@@ -21,6 +21,7 @@ document.body.appendChild(renderer.domElement)
 // Create the controls
 const controls = new OrbitControls(camera, renderer.domElement)
 controls.enableKeys = false
+controls.screenSpacePanning = true
 
 // Update the dimensions of the viewport when the window gets resized
 window.addEventListener('resize', () => {
