@@ -19,7 +19,7 @@ export function isArrayVector4 (arrayVector: any): arrayVector is ArrayVector4 {
 }
 
 export interface MinecraftModelFace {
-  texture: string,
+  texture: string
   uv?: ArrayVector4
 }
 
