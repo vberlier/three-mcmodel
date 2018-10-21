@@ -58,6 +58,7 @@ export class MinecraftModelGeometry extends BufferGeometry {
 
     for (const element of model.elements) {
       const { from, to } = element
+      const centeredCoordinates = from.concat(to).map(coordinate => coordinate - 8)
 
       for (const name in element.faces) {
         const faceName = name as MinecraftModelFaceName
@@ -68,7 +69,7 @@ export class MinecraftModelGeometry extends BufferGeometry {
         indices.push(i, i + 3, i + 2)
 
         for (const vertex of getRotatedVertexMap(face.rotation || 0, vertexMap[faceName])) {
-          vertices.push(...vertex.map((v, i) => v === 0 ? from[i] : to[i]))
+          vertices.push(...vertex.map((v, i) => centeredCoordinates[v * 3 + i]))
         }
 
         const faceUvs = face.uv || getGeneratedUvs(faceName, from, to)
