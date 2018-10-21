@@ -1,6 +1,6 @@
 import { BufferGeometry, Float32BufferAttribute, Uint16BufferAttribute } from 'three'
 
-import { MinecraftModel, MinecraftModelFaceName, ArrayVector3, ArrayVector4, RotationAngle } from './model'
+import { MinecraftModel, MinecraftModelFaceName, ArrayVector3, ArrayVector4, TextureRotationAngle } from './model'
 
 type FaceVertexMap = [ArrayVector3, ArrayVector3, ArrayVector3, ArrayVector3]
 
@@ -15,7 +15,7 @@ const vertexMap: {
   south: [[0, 0, 1], [0, 1, 1], [1, 1, 1], [1, 0, 1]]
 }
 
-function getRotatedVertexMap (rotation: RotationAngle, [a, b, c, d]: FaceVertexMap) {
+function getRotatedVertexMap (rotation: TextureRotationAngle, [a, b, c, d]: FaceVertexMap) {
   return (
     rotation === 0 ? [a, b, c, d] :
     rotation === 90 ? [b, c, d, a] :

@@ -4,7 +4,7 @@ export { MinecraftModelMesh } from './mesh'
 export {
   ArrayVector3, isArrayVector3,
   ArrayVector4, isArrayVector4,
-  RotationAngle,
+  TextureRotationAngle,
   MinecraftModelFaceName, MinecraftModelFace, isMinecraftModelFace,
   MinecraftModelElement, isMinecraftModelElement,
   MinecraftModel, isMinecraftModel

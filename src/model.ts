@@ -18,12 +18,12 @@ export function isArrayVector4 (arrayVector: any): arrayVector is ArrayVector4 {
   )
 }
 
-export type RotationAngle = 0 | 90 | 180 | 270
+export type TextureRotationAngle = 0 | 90 | 180 | 270
 
 export interface MinecraftModelFace {
   texture: string
   uv?: ArrayVector4
-  rotation?: RotationAngle
+  rotation?: TextureRotationAngle
 }
 
 export function isMinecraftModelFace (face: any): face is MinecraftModelFace {
