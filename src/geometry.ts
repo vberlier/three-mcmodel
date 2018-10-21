@@ -1,8 +1,12 @@
 import { BufferGeometry, Float32BufferAttribute, Uint16BufferAttribute } from 'three'
 
-import { MinecraftModel, MinecraftModelFaceName, ArrayVector3, ArrayVector4} from './model'
+import { MinecraftModel, MinecraftModelFaceName, ArrayVector3, ArrayVector4, RotationAngle } from './model'
 
-const vertexMap = {
+type FaceVertexMap = [ArrayVector3, ArrayVector3, ArrayVector3, ArrayVector3]
+
+const vertexMap: {
+  [name in MinecraftModelFaceName]: FaceVertexMap
+} = {
   west: [[0, 0, 0], [0, 1, 0], [0, 1, 1], [0, 0, 1]],
   east: [[1, 0, 1], [1, 1, 1], [1, 1, 0], [1, 0, 0]],
   down: [[0, 0, 0], [0, 0, 1], [1, 0, 1], [1, 0, 0]],
@@ -37,29 +41,46 @@ export class MinecraftModelGeometry extends BufferGeometry {
         indices.push(i, i + 2, i + 1)
         indices.push(i, i + 3, i + 2)
 
-        for (const vertex of vertexMap[faceName]) {
+        for (const vertex of this.rotatedVertexMap(face.rotation || 0, vertexMap[faceName])) {
           vertices.push(...vertex.map((v, i) => v === 0 ? from[i] : to[i]))
         }
 
-        const [u1, v1, u2, v2] = (face.uv || this.generatedUvs(faceName, from, to)).map(coordinate => coordinate / 16)
+        const faceUvs = face.uv || this.generatedUvs(faceName, from, to)
+        const [u1, v1, u2, v2] = this.computeNormalizedUvs(faceUvs)
 
-        uvs.push(u1, 1 - v2)
-        uvs.push(u1, 1 - v1)
-        uvs.push(u2, 1 - v1)
-        uvs.push(u2, 1 - v2)
+        uvs.push(u1, v2)
+        uvs.push(u1, v1)
+        uvs.push(u2, v1)
+        uvs.push(u2, v2)
       }
     }
 
     return [vertices, uvs, indices]
   }
 
-  generatedUvs (faceName: MinecraftModelFaceName, [x1, y1, z1]: ArrayVector3, [x2, y2, z2]: ArrayVector3): ArrayVector4 {
+  private rotatedVertexMap (rotation: RotationAngle, [a, b, c, d]: FaceVertexMap): FaceVertexMap {
+    return (
+      rotation === 0 ? [a, b, c, d] :
+      rotation === 90 ? [b, c, d, a] :
+      rotation === 180 ? [c, d, a, b] :
+      [d, a, b, c]
+    )
+  }
+
+  private generatedUvs (faceName: MinecraftModelFaceName, [x1, y1, z1]: ArrayVector3, [x2, y2, z2]: ArrayVector3): ArrayVector4 {
     return (
       faceName === 'west' ? [z1, 16 - y2, z2, 16 - y1] :
       faceName === 'east' ? [16 - z2, 16 - y2, 16 - z1, 16 - y1] :
       faceName === 'down' ? [x1, 16 - z2, x2, 16 - z1] :
       faceName === 'up' ? [x1, z1, x2, z2] :
-      faceName === 'north' ? [16 - x2, 16 - y2, 16 - x1, 16 - y1] : [x1, 16 - y2, x2, 16 - y1]
+      faceName === 'north' ? [16 - x2, 16 - y2, 16 - x1, 16 - y1] :
+      [x1, 16 - y2, x2, 16 - y1]
      ) as ArrayVector4
+  }
+
+  private computeNormalizedUvs (uvs: ArrayVector4): ArrayVector4 {
+    return uvs.map((coordinate, i) =>
+      (i % 2 ? 16 - coordinate : coordinate) / 16
+    ) as ArrayVector4
   }
 }
