@@ -68,8 +68,8 @@ export class MinecraftModelGeometry extends BufferGeometry {
         indices.push(i, i + 2, i + 1)
         indices.push(i, i + 3, i + 2)
 
-        for (const vertex of getRotatedVertexMap(face.rotation || 0, vertexMaps[faceName])) {
-          vertices.push(...vertex.map((v, i) => centeredCoordinates[v * 3 + i]))
+        for (const vertexMap of getRotatedVertexMap(face.rotation || 0, vertexMaps[faceName])) {
+          vertices.push(...vertexMap.map((v, i) => centeredCoordinates[v * 3 + i]))
         }
 
         const faceUvs = face.uv || getGeneratedUvs(faceName, from, to)
