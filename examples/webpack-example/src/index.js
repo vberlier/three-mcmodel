@@ -6,7 +6,7 @@ import minecraftModel from './minecraftModel.json'
 
 // Create the scene and the camera
 const scene = new Scene()
-const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000)
+const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000)
 camera.position.set(16, 16, 64)
 
 // Create a mesh from the json model and add it to the scene
