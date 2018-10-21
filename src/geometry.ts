@@ -4,7 +4,7 @@ import { MinecraftModel, MinecraftModelFaceName, ArrayVector3, ArrayVector4, Tex
 
 type FaceVertexMap = [ArrayVector3, ArrayVector3, ArrayVector3, ArrayVector3]
 
-const vertexMap: {
+const vertexMaps: {
   [name in MinecraftModelFaceName]: FaceVertexMap
 } = {
   west: [[0, 0, 0], [0, 1, 0], [0, 1, 1], [0, 0, 1]],
@@ -68,7 +68,7 @@ export class MinecraftModelGeometry extends BufferGeometry {
         indices.push(i, i + 2, i + 1)
         indices.push(i, i + 3, i + 2)
 
-        for (const vertex of getRotatedVertexMap(face.rotation || 0, vertexMap[faceName])) {
+        for (const vertex of getRotatedVertexMap(face.rotation || 0, vertexMaps[faceName])) {
           vertices.push(...vertex.map((v, i) => centeredCoordinates[v * 3 + i]))
         }
 
