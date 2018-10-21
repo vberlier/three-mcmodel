@@ -1,4 +1,7 @@
-import { Scene, PerspectiveCamera, WebGLRenderer } from 'three'
+import {
+  Scene, PerspectiveCamera, WebGLRenderer,
+  CubeGeometry, EdgesGeometry, LineBasicMaterial, LineSegments
+} from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import { MinecraftModelMesh } from 'three-mcmodel'
 
@@ -12,6 +15,13 @@ camera.position.set(16, 16, 64)
 // Create a mesh from the json model and add it to the scene
 const mesh = new MinecraftModelMesh(minecraftModel)
 scene.add(mesh)
+
+// Create cube indicator
+const wireframe = new LineSegments(
+  new EdgesGeometry(new CubeGeometry(16, 16, 16)),
+  new LineBasicMaterial({ color: 0x444444, linewidth: 2 })
+)
+scene.add(wireframe)
 
 // Create the renderer and append it to the document body
 const renderer = new WebGLRenderer({ antialias: true, alpha: true })
