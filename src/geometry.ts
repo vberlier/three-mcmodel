@@ -1,30 +1,91 @@
-import { BufferGeometry, Float32BufferAttribute, Uint16BufferAttribute } from 'three'
+import {
+  BufferGeometry, Matrix3, Vector3,
+  Float32BufferAttribute, Uint16BufferAttribute
+} from 'three'
 
-import { MinecraftModel, MinecraftModelFaceName, ArrayVector3, ArrayVector4, TextureRotationAngle } from './model'
-
-type FaceVertexMap = [ArrayVector3, ArrayVector3, ArrayVector3, ArrayVector3]
+import {
+  MinecraftModel, ArrayVector3, ArrayVector4,
+  MinecraftModelFaceName, TextureRotationAngle, MinecraftModelElementRotation
+} from './model'
 
 const vertexMaps: {
-  [name in MinecraftModelFaceName]: FaceVertexMap
+  [name in MinecraftModelFaceName]: ArrayVector4
 } = {
-  west: [[0, 0, 0], [0, 1, 0], [0, 1, 1], [0, 0, 1]],
-  east: [[1, 0, 1], [1, 1, 1], [1, 1, 0], [1, 0, 0]],
-  down: [[0, 0, 0], [0, 0, 1], [1, 0, 1], [1, 0, 0]],
-  up: [[0, 1, 1], [0, 1, 0], [1, 1, 0], [1, 1, 1]],
-  north: [[1, 0, 0], [1, 1, 0], [0, 1, 0], [0, 0, 0]],
-  south: [[0, 0, 1], [0, 1, 1], [1, 1, 1], [1, 0, 1]]
+  west: [0, 1, 2, 3],
+  east: [4, 5, 6, 7],
+  down: [0, 3, 4, 7],
+  up: [2, 1, 6, 5],
+  north: [7, 6, 1, 0],
+  south: [3, 2, 5, 4]
 }
 
-function getRotatedVertexMap (rotation: TextureRotationAngle, [a, b, c, d]: FaceVertexMap) {
+function applyVertexMapRotation (rotation: TextureRotationAngle, [a, b, c, d]: ArrayVector4) {
   return (
     rotation === 0 ? [a, b, c, d] :
     rotation === 90 ? [b, c, d, a] :
     rotation === 180 ? [c, d, a, b] :
     [d, a, b, c]
-  ) as FaceVertexMap
+  ) as ArrayVector4
 }
 
-function getGeneratedUvs (faceName: MinecraftModelFaceName, [x1, y1, z1]: ArrayVector3, [x2, y2, z2]: ArrayVector3) {
+function getCornerVertices (from: ArrayVector3, to: ArrayVector3, rotation?: MinecraftModelElementRotation) {
+  const [x1, y1, z1, x2, y2, z2] = from.concat(to).map(coordinate => coordinate - 8)
+
+  const corners = [
+    [x1, y1, z1],
+    [x1, y2, z1],
+    [x1, y2, z2],
+    [x1, y1, z2],
+    [x2, y1, z2],
+    [x2, y2, z2],
+    [x2, y2, z1],
+    [x2, y1, z1]
+  ] as ArrayVector3[]
+
+  if (rotation) {
+    const origin = new Vector3()
+      .fromArray(rotation.origin)
+      .subScalar(8)
+
+    const angle = rotation.angle / 180 * Math.PI
+    const cos = Math.cos(angle)
+    const sin = Math.sin(angle)
+    const matrix = new Matrix3()
+
+    if (rotation.axis == 'x') {
+      matrix.set(
+        1, 0, 0,
+        0, cos, -sin,
+        0, sin, cos
+      )
+    } else if (rotation.axis == 'y') {
+      matrix.set(
+        cos, 0, sin,
+        0, 1, 0,
+        -sin, 0, cos
+      )
+    } else {
+      matrix.set(
+        cos, -sin, 0,
+        sin, cos, 0,
+        0, 0, 1
+      )
+    }
+
+    for (let i = 0; i < corners.length; i++) {
+      corners[i] = new Vector3()
+        .fromArray(corners[i])
+        .sub(origin)
+        .applyMatrix3(matrix)
+        .add(origin)
+        .toArray() as ArrayVector3
+    }
+  }
+
+  return corners
+}
+
+function generateDefaultUvs (faceName: MinecraftModelFaceName, [x1, y1, z1]: ArrayVector3, [x2, y2, z2]: ArrayVector3) {
   return (
     faceName === 'west' ? [z1, 16 - y2, z2, 16 - y1] :
     faceName === 'east' ? [16 - z2, 16 - y2, 16 - z1, 16 - y1] :
@@ -57,8 +118,8 @@ export class MinecraftModelGeometry extends BufferGeometry {
     const indices = []
 
     for (const element of model.elements) {
-      const { from, to } = element
-      const centeredCoordinates = from.concat(to).map(coordinate => coordinate - 8)
+      const { from, to, rotation } = element
+      const cornerVertices = getCornerVertices(from, to, rotation)
 
       for (const name in element.faces) {
         const faceName = name as MinecraftModelFaceName
@@ -68,11 +129,11 @@ export class MinecraftModelGeometry extends BufferGeometry {
         indices.push(i, i + 2, i + 1)
         indices.push(i, i + 3, i + 2)
 
-        for (const vertexMap of getRotatedVertexMap(face.rotation || 0, vertexMaps[faceName])) {
-          vertices.push(...vertexMap.map((v, i) => centeredCoordinates[v * 3 + i]))
+        for (const index of applyVertexMapRotation(face.rotation || 0, vertexMaps[faceName])) {
+          vertices.push(...cornerVertices[index])
         }
 
-        const faceUvs = face.uv || getGeneratedUvs(faceName, from, to)
+        const faceUvs = face.uv || generateDefaultUvs(faceName, from, to)
         const [u1, v1, u2, v2] = computeNormalizedUvs(faceUvs)
 
         uvs.push(u1, v2)

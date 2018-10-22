@@ -6,6 +6,8 @@ export {
   ArrayVector4, isArrayVector4,
   TextureRotationAngle,
   MinecraftModelFaceName, MinecraftModelFace, isMinecraftModelFace,
+  ElementRotationAngle, ElementRotationAxis,
+  MinecraftModelElementRotation, isMinecraftModelElementRotation,
   MinecraftModelElement, isMinecraftModelElement,
   MinecraftModel, isMinecraftModel
 } from './model'

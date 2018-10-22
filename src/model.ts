@@ -39,9 +39,30 @@ export function isMinecraftModelFace (face: any): face is MinecraftModelFace {
 
 export type MinecraftModelFaceName = 'west' | 'east' | 'down' | 'up' | 'north' | 'south'
 
+export type ElementRotationAngle = -45 | -22.5 | 0 | 22.5 | 45
+export type ElementRotationAxis = 'x' | 'y' | 'z'
+
+export interface MinecraftModelElementRotation {
+  origin: ArrayVector3
+  angle: ElementRotationAngle
+  axis: ElementRotationAxis
+  rescale?: boolean
+}
+
+export function isMinecraftModelElementRotation (rotation: any): rotation is MinecraftModelElementRotation {
+  return (
+    rotation &&
+    isArrayVector3(rotation.origin) &&
+    [-45, -22.5, 0, 22.5, 45].includes(rotation.angle) &&
+    ['x', 'y', 'z'].includes(rotation.axis) &&
+    (rotation.rescale === undefined || typeof rotation.rescale === 'boolean')
+  )
+}
+
 export interface MinecraftModelElement {
   from: ArrayVector3
   to: ArrayVector3
+  rotation?: MinecraftModelElementRotation
   faces: { [name in MinecraftModelFaceName]: MinecraftModelFace }
 }
 
@@ -52,6 +73,7 @@ export function isMinecraftModelElement (element: any): element is MinecraftMode
     element &&
     isArrayVector3(element.from) &&
     isArrayVector3(element.to) &&
+    (element.rotation === undefined || isMinecraftModelElementRotation(element.rotation)) &&
     element.faces &&
     (faceCount = Object.keys(element.faces).length) >= 1 &&
     faceCount <= 6 &&
