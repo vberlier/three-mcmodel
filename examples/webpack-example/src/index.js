@@ -19,7 +19,7 @@ scene.add(mesh)
 // Create cube indicator
 const wireframe = new LineSegments(
   new EdgesGeometry(new CubeGeometry(16, 16, 16)),
-  new LineBasicMaterial({ color: 0x444444, linewidth: 2 })
+  new LineBasicMaterial({ color: 0x1111cc, linewidth: 3 })
 )
 scene.add(wireframe)
 
