@@ -4,8 +4,8 @@ import {
 } from 'three'
 
 import {
-  MinecraftModel, ArrayVector3, ArrayVector4,
-  MinecraftModelFaceName, TextureRotationAngle, MinecraftModelElementRotation
+  MinecraftModel, ArrayVector3, ArrayVector4, MinecraftModelFaceName, TextureRotationAngle,
+  MinecraftModelElementRotation, ElementRotationAxis
 } from './model'
 
 const vertexMaps: {
@@ -28,10 +28,57 @@ function applyVertexMapRotation (rotation: TextureRotationAngle, [a, b, c, d]: A
   ) as ArrayVector4
 }
 
-function getCornerVertices (from: ArrayVector3, to: ArrayVector3, rotation?: MinecraftModelElementRotation) {
+function buildMatrix (angle: number, scale: number, axis: ElementRotationAxis) {
+  const a = Math.cos(angle) * scale
+  const b = Math.sin(angle) * scale
+  const matrix = new Matrix3()
+
+  if (axis === 'x') {
+    matrix.set(
+      1, 0, 0,
+      0, a, -b,
+      0, b, a
+    )
+  } else if (axis === 'y') {
+    matrix.set(
+      a, 0, b,
+      0, 1, 0,
+      -b, 0, a
+    )
+  } else {
+    matrix.set(
+      a, -b, 0,
+      b, a, 0,
+      0, 0, 1
+    )
+  }
+
+  return matrix
+}
+
+function rotateCubeCorners (corners: ArrayVector3[], rotation: MinecraftModelElementRotation) {
+  const origin = new Vector3()
+    .fromArray(rotation.origin)
+    .subScalar(8)
+
+  const angle = rotation.angle / 180 * Math.PI
+  const scale = rotation.rescale ? Math.SQRT2 / Math.sqrt(Math.cos(angle || Math.PI / 4)**2 * 2) : 1
+  const matrix = buildMatrix(angle, scale, rotation.axis)
+
+  return corners.map(
+    vertex => new Vector3()
+      .fromArray(vertex)
+      .sub(origin)
+      .applyMatrix3(matrix)
+      .add(origin)
+      .toArray()
+  ) as ArrayVector3[]
+}
+
+function getCornerVertices (from: ArrayVector3, to: ArrayVector3) {
   const [x1, y1, z1, x2, y2, z2] = from.concat(to).map(coordinate => coordinate - 8)
 
-  const corners = [
+  return [
     [x1, y1, z1],
     [x1, y2, z1],
     [x1, y2, z2],
@@ -41,49 +88,6 @@ function getCornerVertices (from: ArrayVector3, to: ArrayVector3, rotation?: Min
     [x2, y2, z1],
     [x2, y1, z1]
   ] as ArrayVector3[]
-
-  if (rotation) {
-    const origin = new Vector3()
-      .fromArray(rotation.origin)
-      .subScalar(8)
-
-    const angle = rotation.angle / 180 * Math.PI
-    const scale = rotation.rescale ? Math.SQRT2 / Math.sqrt(Math.cos(angle || Math.PI / 4)**2 * 2) : 1
-    const cos = Math.cos(angle) * scale
-    const sin = Math.sin(angle) * scale
-    const matrix = new Matrix3()
-
-    if (rotation.axis == 'x') {
-      matrix.set(
-        1, 0, 0,
-        0, cos, -sin,
-        0, sin, cos
-      )
-    } else if (rotation.axis == 'y') {
-      matrix.set(
-        cos, 0, sin,
-        0, 1, 0,
-        -sin, 0, cos
-      )
-    } else {
-      matrix.set(
-        cos, -sin, 0,
-        sin, cos, 0,
-        0, 0, 1
-      )
-    }
-
-    for (let i = 0; i < corners.length; i++) {
-      corners[i] = new Vector3()
-        .fromArray(corners[i])
-        .sub(origin)
-        .applyMatrix3(matrix)
-        .add(origin)
-        .toArray() as ArrayVector3
-    }
-  }
-
-  return corners
 }
 
 function generateDefaultUvs (faceName: MinecraftModelFaceName, [x1, y1, z1]: ArrayVector3, [x2, y2, z2]: ArrayVector3) {
@@ -120,7 +124,8 @@ export class MinecraftModelGeometry extends BufferGeometry {
 
     for (const element of model.elements) {
       const { from, to, rotation } = element
-      const cornerVertices = getCornerVertices(from, to, rotation)
+      const cornerVertices = getCornerVertices(from, to)
+      const rotatedVertices = rotation ? rotateCubeCorners(cornerVertices, rotation) : cornerVertices
 
       for (const name in element.faces) {
         const faceName = name as MinecraftModelFaceName
@@ -131,7 +136,7 @@ export class MinecraftModelGeometry extends BufferGeometry {
         indices.push(i, i + 3, i + 2)
 
         for (const index of applyVertexMapRotation(face.rotation || 0, vertexMaps[faceName])) {
-          vertices.push(...cornerVertices[index])
+          vertices.push(...rotatedVertices[index])
         }
 
         const faceUvs = face.uv || generateDefaultUvs(faceName, from, to)
