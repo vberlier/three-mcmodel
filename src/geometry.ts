@@ -48,8 +48,9 @@ function getCornerVertices (from: ArrayVector3, to: ArrayVector3, rotation?: Min
       .subScalar(8)
 
     const angle = rotation.angle / 180 * Math.PI
-    const cos = Math.cos(angle)
-    const sin = Math.sin(angle)
+    const scale = rotation.rescale ? Math.SQRT2 / Math.sqrt(Math.cos(angle || Math.PI / 4)**2 * 2) : 1
+    const cos = Math.cos(angle) * scale
+    const sin = Math.sin(angle) * scale
     const matrix = new Matrix3()
 
     if (rotation.axis == 'x') {
