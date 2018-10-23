@@ -1,4 +1,4 @@
-import { MeshBasicMaterial, Texture } from 'three'
+import { MeshBasicMaterial } from 'three'
 
 import { missingTexture, missingTextureMaterial } from './missingTexture'
 import { MinecraftModel } from './model'
