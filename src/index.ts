@@ -1,4 +1,5 @@
 export { MinecraftModelGeometry } from './geometry'
+export { MinecraftModelLoader } from './loader'
 export { MinecraftModelMaterial } from './material'
 export { MinecraftModelMesh } from './mesh'
 export {

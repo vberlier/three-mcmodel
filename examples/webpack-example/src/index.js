@@ -3,9 +3,9 @@ import {
   CubeGeometry, EdgesGeometry, LineBasicMaterial, LineSegments
 } from 'three'
 import OrbitControls from 'three-orbitcontrols'
-import { MinecraftModelMesh } from 'three-mcmodel'
+import { MinecraftModelLoader } from 'three-mcmodel'
 
-import minecraftModel from './minecraftModel.json'
+import cakeModel from './assets/cake.json'
 
 // Create the scene and the camera
 const scene = new Scene()
@@ -13,8 +13,10 @@ const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight,
 camera.position.set(16, 16, 64)
 
 // Create a mesh from the json model and add it to the scene
-const mesh = new MinecraftModelMesh(minecraftModel)
-scene.add(mesh)
+const loader = new MinecraftModelLoader()
+loader.load(cakeModel, mesh => {
+  scene.add(mesh)
+})
 
 // Create cube indicator
 const wireframe = new LineSegments(
