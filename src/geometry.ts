@@ -115,6 +115,8 @@ export class MinecraftModelGeometry extends BufferGeometry {
     this.addAttribute('position', new Float32BufferAttribute(vertices, 3))
     this.addAttribute('uv', new Float32BufferAttribute(uvs, 2))
     this.setIndex(new Uint16BufferAttribute(indices, 1))
+
+    this.addGroup(0, indices.length, 0)
   }
 
   public static computeAttributes (model: MinecraftModel) {
