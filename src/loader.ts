@@ -7,7 +7,7 @@ type OnProgress = (request: ProgressEvent) => void
 type OnError = (event: ErrorEvent) => void
 
 export class MinecraftModelLoader {
-  manager: LoadingManager
+  public manager: LoadingManager
 
   constructor (manager?: LoadingManager) {
     this.manager = manager !== undefined ? manager : DefaultLoadingManager
