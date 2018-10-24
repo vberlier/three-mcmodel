@@ -1,4 +1,4 @@
-import { MeshBasicMaterial } from 'three'
+import { MeshBasicMaterial, Texture } from 'three'
 
 import { missingTexture, missingTextureMaterial } from './missingTexture'
 import { MinecraftModel } from './model'
@@ -8,6 +8,7 @@ export class MinecraftModelMaterial extends Array<MeshBasicMaterial> {
 
   constructor ({ textures }: MinecraftModel) {
     super(missingTextureMaterial)
+    Object.setPrototypeOf(this, MinecraftModelMaterial.prototype)
 
     const texturePaths = [...new Set(Object.values(textures))].sort()
 
@@ -17,5 +18,13 @@ export class MinecraftModelMaterial extends Array<MeshBasicMaterial> {
 
       this.push(material)
     }
+  }
+
+  public resolveTextures (resolver: (path: string) => Promise<Texture>) {
+    return Promise.all(Object.keys(this.materials).map(async path => {
+      const texture = await resolver(path)
+      this.materials[path].map = texture
+      return texture
+    }))
   }
 }

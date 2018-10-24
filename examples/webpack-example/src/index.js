@@ -1,11 +1,9 @@
 import {
-  Scene, PerspectiveCamera, WebGLRenderer,
+  Scene, PerspectiveCamera, WebGLRenderer, TextureLoader, NearestFilter,
   CubeGeometry, EdgesGeometry, LineBasicMaterial, LineSegments
 } from 'three'
 import OrbitControls from 'three-orbitcontrols'
 import { MinecraftModelLoader } from 'three-mcmodel'
-
-import cakeModel from './assets/cake.json'
 
 // Create the scene and the camera
 const scene = new Scene()
@@ -14,7 +12,18 @@ camera.position.set(16, 16, 64)
 
 // Create a mesh from the json model and add it to the scene
 const loader = new MinecraftModelLoader()
-loader.load(cakeModel, mesh => {
+loader.load(require('./assets/cake.json'), async mesh => {
+  const loader = new TextureLoader()
+
+  await mesh.material.resolveTextures(async path => {
+    const texture = await new Promise(resolve => {
+      loader.load(require('./assets/' + path.substring(6) + '.png'), resolve)
+    })
+
+    texture.magFilter = NearestFilter
+    return texture
+  })
+
   scene.add(mesh)
 })
 
