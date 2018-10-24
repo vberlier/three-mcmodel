@@ -13,9 +13,13 @@ export class MinecraftModelMaterial extends Array<MeshBasicMaterial> {
     const texturePaths = [...new Set(Object.values(textures))].sort()
 
     for (const path of texturePaths) {
-      const material = new MeshBasicMaterial({ map: missingTexture })
-      this.materials[path] = material
+      const material = new MeshBasicMaterial({
+        map: missingTexture,
+        transparent: true,
+        alphaTest: 0.5
+      })
 
+      this.materials[path] = material
       this.push(material)
     }
   }
