@@ -1,4 +1,4 @@
-import { MeshBasicMaterial, Texture } from 'three'
+import { MeshBasicMaterial, Texture, NearestFilter } from 'three'
 
 import { missingTexture, missingTextureMaterial } from './missingTexture'
 import { MinecraftModel } from './model'
@@ -24,9 +24,12 @@ export class MinecraftModelMaterial extends Array<MeshBasicMaterial> {
     }
   }
 
-  public resolveTextures (resolver: (path: string) => Promise<Texture>) {
+  public resolveTextures (resolver: (path: string) => Promise<HTMLImageElement>) {
     return Promise.all(Object.keys(this.materials).map(async path => {
-      const texture = await resolver(path)
+      const texture = new Texture(await resolver(path))
+      texture.magFilter = NearestFilter
+      texture.needsUpdate = true
+
       this.materials[path].map = texture
       return texture
     }))
