@@ -1,7 +1,7 @@
 export { MinecraftModelGeometry } from './geometry'
-export { MinecraftModelLoader } from './loader'
-export { MinecraftModelMaterial } from './material'
-export { MinecraftModelMesh } from './mesh'
+export { AbstractLoader } from './loader'
+export { MinecraftModelMaterial, MISSING_TEXTURE_MATERIAL } from './material'
+export { MinecraftModelLoader, MinecraftModelMesh } from './mesh'
 export {
   ArrayVector3, isArrayVector3,
   ArrayVector4, isArrayVector4,
@@ -12,3 +12,4 @@ export {
   MinecraftModelElement, isMinecraftModelElement,
   MinecraftModel, isMinecraftModel
 } from './model'
+export { MinecraftTextureLoader, MinecraftTexture, MISSING_TEXTURE } from './texture'

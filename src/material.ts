@@ -1,37 +1,15 @@
-import { MeshBasicMaterial, Texture, NearestFilter } from 'three'
+import { MeshBasicMaterial } from 'three'
 
-import { missingTexture, missingTextureMaterial } from './missingTexture'
-import { MinecraftModel } from './model'
+import { MinecraftTexture, MISSING_TEXTURE } from './texture'
 
-export class MinecraftModelMaterial extends Array<MeshBasicMaterial> {
-  private materials: { [path: string]: MeshBasicMaterial } = {}
-
-  constructor ({ textures }: MinecraftModel) {
-    super(missingTextureMaterial)
-    Object.setPrototypeOf(this, MinecraftModelMaterial.prototype)
-
-    const texturePaths = [...new Set(Object.values(textures))].sort()
-
-    for (const path of texturePaths) {
-      const material = new MeshBasicMaterial({
-        map: missingTexture,
-        transparent: true,
-        alphaTest: 0.5
-      })
-
-      this.materials[path] = material
-      this.push(material)
-    }
-  }
-
-  public resolveTextures (resolver: (path: string) => Promise<HTMLImageElement>) {
-    return Promise.all(Object.keys(this.materials).map(async path => {
-      const texture = new Texture(await resolver(path))
-      texture.magFilter = NearestFilter
-      texture.needsUpdate = true
-
-      this.materials[path].map = texture
-      return texture
-    }))
+export class MinecraftModelMaterial extends MeshBasicMaterial {
+  constructor (map: MinecraftTexture = MISSING_TEXTURE) {
+    super({
+      map: map,
+      transparent: true,
+      alphaTest: 0.5
+    })
   }
 }
+
+export const MISSING_TEXTURE_MATERIAL = new MinecraftModelMaterial(MISSING_TEXTURE)

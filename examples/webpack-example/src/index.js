@@ -1,9 +1,9 @@
 import {
-  Scene, PerspectiveCamera, WebGLRenderer, ImageLoader,
+  Scene, PerspectiveCamera, WebGLRenderer,
   CubeGeometry, EdgesGeometry, LineBasicMaterial, LineSegments
 } from 'three'
 import OrbitControls from 'three-orbitcontrols'
-import { MinecraftModelLoader } from 'three-mcmodel'
+import { MinecraftModelLoader, MinecraftTextureLoader } from 'three-mcmodel'
 
 // Create the scene and the camera
 const scene = new Scene()
@@ -11,14 +11,9 @@ const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight,
 camera.position.set(16, 16, 64)
 
 // Create a mesh from the json model and add it to the scene
-const loader = new MinecraftModelLoader()
-loader.load(require('./assets/cake.json'), async mesh => {
-  const loader = new ImageLoader()
-
-  await mesh.material.resolveTextures(path => new Promise(resolve => {
-    loader.load(require('./assets/' + path.substring(6) + '.png'), resolve)
-  }))
-
+new MinecraftModelLoader().load(require('./assets/cake.json'), mesh => {
+  const textureLoader = new MinecraftTextureLoader()
+  mesh.resolveTextures(path => textureLoader.load(require(`./assets/${path.substr(6)}.png`)))
   scene.add(mesh)
 })
 

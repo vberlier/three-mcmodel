@@ -1,10 +1,36 @@
-import { Mesh } from 'three'
+import { Mesh, FileLoader } from 'three'
 
 import { MinecraftModelGeometry } from './geometry'
-import { MinecraftModelMaterial } from './material'
+import { AbstractLoader, OnProgress, OnError } from './loader'
+import { MinecraftModelMaterial, MISSING_TEXTURE_MATERIAL } from './material'
 import { MinecraftModel, isMinecraftModel } from './model'
+import { MinecraftTexture } from './texture'
+
+type OnLoad = (mesh: MinecraftModelMesh) => void
+
+export class MinecraftModelLoader extends AbstractLoader {
+  public load (url: string, onLoad?: OnLoad, onProgress?: OnProgress, onError?: OnError) {
+    const loader = new FileLoader(this.manager)
+    loader.setPath(this.path)
+    loader.setResponseType('json')
+
+    const handleLoad = (model: any) => {
+      const mesh = new MinecraftModelMesh(model)
+
+      if (onLoad) {
+        onLoad(mesh)
+      }
+    }
+
+    loader.load(url, handleLoad, onProgress, onError)
+  }
+}
+
+type MaterialMapping = { [path: string]: MinecraftModelMaterial }
 
 export class MinecraftModelMesh extends Mesh {
+  private materialMapping: MaterialMapping
+
   constructor (model: MinecraftModel | string | any) {
     if (typeof model === 'string') {
       model = JSON.parse(model)
@@ -15,8 +41,20 @@ export class MinecraftModelMesh extends Mesh {
     }
 
     const geometry = new MinecraftModelGeometry(model)
-    const material = new MinecraftModelMaterial(model)
 
-    super(geometry, material)
+    const sortedTextures = [...new Set(Object.values(model.textures))].sort()
+    const mapping: MaterialMapping = {}
+    const materials = sortedTextures
+      .map(path => mapping[path] = new MinecraftModelMaterial())
+
+    super(geometry, [MISSING_TEXTURE_MATERIAL, ...materials])
+
+    this.materialMapping = mapping
+  }
+
+  public resolveTextures (resolver: (path: string) => MinecraftTexture) {
+    for (const path in this.materialMapping) {
+      this.materialMapping[path].map = resolver(path)
+    }
   }
 }
