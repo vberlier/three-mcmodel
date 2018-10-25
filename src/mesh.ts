@@ -15,10 +15,16 @@ export class MinecraftModelLoader extends AbstractLoader {
     loader.setResponseType('json')
 
     const handleLoad = (model: any) => {
-      const mesh = new MinecraftModelMesh(model)
+      try {
+        const mesh = new MinecraftModelMesh(model)
 
-      if (onLoad) {
-        onLoad(mesh)
+        if (onLoad) {
+          onLoad(mesh)
+        }
+      } catch (err) {
+        if (onError) {
+          onError(err)
+        }
       }
     }
 

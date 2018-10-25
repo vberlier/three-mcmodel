@@ -2,7 +2,7 @@ import { LoadingManager, DefaultLoadingManager } from 'three'
 
 export type OnLoad = (response: any) => void
 export type OnProgress = (request: ProgressEvent) => void
-export type OnError = (event: ErrorEvent) => void
+export type OnError = (error: any) => void
 
 export abstract class AbstractLoader {
   public path = ''
