@@ -1,0 +1,17 @@
+{
+  "name": "parcel-example",
+  "license": "MIT",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "dependencies": {
+    "three": "^0.97.0",
+    "three-mcmodel": "latest",
+    "three-orbitcontrols": "^2.96.3"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.10.3",
+    "parcel-plugin-json-url-loader": "^0.1.1"
+  }
+}
