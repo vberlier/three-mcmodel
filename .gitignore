@@ -65,3 +65,4 @@ lib
 
 
 examples/**/dist
+.cache
