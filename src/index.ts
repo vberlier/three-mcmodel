@@ -12,4 +12,7 @@ export {
   MinecraftModelElement, isMinecraftModelElement,
   MinecraftModel, isMinecraftModel
 } from './model'
-export { MinecraftTextureLoader, MinecraftTexture, MISSING_TEXTURE } from './texture'
+export {
+  MinecraftTextureLoader, MinecraftTexture,
+  MISSING_TEXTURE, CHECKERBOARD_IMAGE
+} from './texture'
