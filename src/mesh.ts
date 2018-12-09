@@ -6,32 +6,6 @@ import { MinecraftModelMaterial, MISSING_TEXTURE_MATERIAL } from './material'
 import { MinecraftModel, isMinecraftModel } from './model'
 import { MinecraftTexture } from './texture'
 
-type OnLoad = (mesh: MinecraftModelMesh) => void
-
-export class MinecraftModelLoader extends AbstractLoader {
-  public load (url: string, onLoad?: OnLoad, onProgress?: OnProgress, onError?: OnError) {
-    const loader = new FileLoader(this.manager)
-    loader.setPath(this.path)
-    loader.setResponseType('json')
-
-    const handleLoad = (model: any) => {
-      try {
-        const mesh = new MinecraftModelMesh(model)
-
-        if (onLoad) {
-          onLoad(mesh)
-        }
-      } catch (err) {
-        if (onError) {
-          onError(err)
-        }
-      }
-    }
-
-    loader.load(url, handleLoad, onProgress, onError)
-  }
-}
-
 type MaterialMapping = { [path: string]: MinecraftModelMaterial }
 
 export class MinecraftModelMesh extends Mesh {
@@ -62,5 +36,31 @@ export class MinecraftModelMesh extends Mesh {
     for (const path in this.materialMapping) {
       this.materialMapping[path].map = resolver(path)
     }
+  }
+}
+
+type OnLoad = (mesh: MinecraftModelMesh) => void
+
+export class MinecraftModelLoader extends AbstractLoader {
+  public load (url: string, onLoad?: OnLoad, onProgress?: OnProgress, onError?: OnError) {
+    const loader = new FileLoader(this.manager)
+    loader.setPath(this.path)
+    loader.setResponseType('json')
+
+    const handleLoad = (model: any) => {
+      try {
+        const mesh = new MinecraftModelMesh(model)
+
+        if (onLoad) {
+          onLoad(mesh)
+        }
+      } catch (err) {
+        if (onError) {
+          onError(err)
+        }
+      }
+    }
+
+    loader.load(url, handleLoad, onProgress, onError)
   }
 }
