@@ -184,6 +184,10 @@ export class MinecraftModelGeometry extends BufferGeometry {
         const faceName = name as MinecraftModelFaceName
         const face = element.faces[faceName]
 
+        if (face === undefined) {
+          continue
+        }
+
         const { vertices, uvs, indices } = builder.getContext(face.texture)
 
         const i = vertices.length / 3

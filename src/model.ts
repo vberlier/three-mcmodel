@@ -63,7 +63,7 @@ export interface MinecraftModelElement {
   from: ArrayVector3
   to: ArrayVector3
   rotation?: MinecraftModelElementRotation
-  faces: { [name in MinecraftModelFaceName]: MinecraftModelFace }
+  faces: { [name in MinecraftModelFaceName]?: MinecraftModelFace }
 }
 
 export function isMinecraftModelElement (element: any): element is MinecraftModelElement {
