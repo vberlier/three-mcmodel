@@ -1,9 +1,9 @@
 import { MeshBasicMaterial } from 'three'
 
-import { MinecraftTexture, MISSING_TEXTURE } from './texture'
+import { MinecraftTexture } from './texture'
 
 export class MinecraftModelMaterial extends MeshBasicMaterial {
-  constructor (map: MinecraftTexture = MISSING_TEXTURE) {
+  constructor (map: MinecraftTexture = new MinecraftTexture()) {
     super({
       map: map,
       transparent: true,
@@ -11,5 +11,3 @@ export class MinecraftModelMaterial extends MeshBasicMaterial {
     })
   }
 }
-
-export const MISSING_TEXTURE_MATERIAL = new MinecraftModelMaterial(MISSING_TEXTURE)

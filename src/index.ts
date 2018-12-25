@@ -1,6 +1,6 @@
 export { MinecraftModelGeometry } from './geometry'
 export { AbstractLoader } from './loader'
-export { MinecraftModelMaterial, MISSING_TEXTURE_MATERIAL } from './material'
+export { MinecraftModelMaterial } from './material'
 export { MinecraftModelLoader, MinecraftModelMesh } from './mesh'
 export {
   ArrayVector3, isArrayVector3,
@@ -13,6 +13,5 @@ export {
   MinecraftModel, isMinecraftModel
 } from './model'
 export {
-  MinecraftTextureLoader, MinecraftTexture,
-  MISSING_TEXTURE, CHECKERBOARD_IMAGE
+  MinecraftTextureLoader, MinecraftTexture, CHECKERBOARD_IMAGE
 } from './texture'

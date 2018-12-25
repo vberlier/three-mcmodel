@@ -2,7 +2,7 @@ import { Mesh, FileLoader } from 'three'
 
 import { MinecraftModelGeometry } from './geometry'
 import { AbstractLoader, OnProgress, OnError } from './loader'
-import { MinecraftModelMaterial, MISSING_TEXTURE_MATERIAL } from './material'
+import { MinecraftModelMaterial } from './material'
 import { MinecraftModel, isMinecraftModel } from './model'
 import { MinecraftTexture } from './texture'
 
@@ -27,7 +27,7 @@ export class MinecraftModelMesh extends Mesh {
     const materials = sortedTextures
       .map(path => mapping[path] = new MinecraftModelMaterial())
 
-    super(geometry, [MISSING_TEXTURE_MATERIAL, ...materials])
+    super(geometry, [new MinecraftModelMaterial(), ...materials])
 
     this.materialMapping = mapping
   }

@@ -2,12 +2,12 @@ import { NearestFilter, Texture, ImageLoader } from 'three'
 
 import { AbstractLoader, OnProgress, OnError } from './loader'
 
-export const CHECKERBOARD_IMAGE = new ImageLoader().load('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4goSFSEEtucn/QAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAkSURBVCjPY2TAAX4w/MAqzsRAIhjVQAxgxBXeHAwco6FEPw0A+iAED8NWwMQAAAAASUVORK5CYII=')
+export const CHECKERBOARD_IMAGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4goSFSEEtucn/QAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAAAkSURBVCjPY2TAAX4w/MAqzsRAIhjVQAxgxBXeHAwco6FEPw0A+iAED8NWwMQAAAAASUVORK5CYII='
 
 export class MinecraftTexture extends Texture {
-  private _image: HTMLImageElement = CHECKERBOARD_IMAGE
+  private _image?: HTMLImageElement
 
-  constructor (image: HTMLImageElement = CHECKERBOARD_IMAGE) {
+  constructor (image?: HTMLImageElement) {
     super()
     this.image = image
     this.magFilter = NearestFilter
@@ -18,12 +18,10 @@ export class MinecraftTexture extends Texture {
   }
 
   set image (value) {
-    this._image = value && value.width === value.height ? value : CHECKERBOARD_IMAGE
+    this._image = value && value.width === value.height ? value : new ImageLoader().load(CHECKERBOARD_IMAGE)
     this.needsUpdate = true
   }
 }
-
-export const MISSING_TEXTURE = new MinecraftTexture(CHECKERBOARD_IMAGE)
 
 type OnLoad = (texture: MinecraftTexture) => void
 
