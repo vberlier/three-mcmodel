@@ -6,7 +6,7 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "three": "^0.97.0",
+    "three": "^0.125.0",
     "three-mcmodel": "latest",
     "three-orbitcontrols": "^2.96.3"
   },
